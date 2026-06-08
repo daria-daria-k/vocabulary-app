@@ -1,0 +1,38 @@
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from app.database import Base, get_db
+
+import os
+from dotenv import load_dotenv
+
+import pytest
+
+from fastapi.testclient import TestClient
+from app.main import app
+
+load_dotenv()
+
+DATABASE_URL_TEST = os.getenv('DATABASE_URL_TEST')
+engine = create_engine(DATABASE_URL_TEST, echo=True)
+
+sessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+def override_get_db():
+    db = sessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+@pytest.fixture
+def test_db():
+    Base.metadata.create_all(engine)
+    yield
+    Base.metadata.drop_all(engine)
+
+
+@pytest.fixture
+def client(test_db):
+    app.dependency_overrides[get_db] = override_get_db
+    yield TestClient(app)
+    app.dependency_overrides.clear()

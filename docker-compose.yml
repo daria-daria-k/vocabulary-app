@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:15
+    container_name: db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-english}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-english_password}
+      POSTGRES_DB: ${POSTGRES_DB:-english}
+    ports:
+      - "5432:5432"
+
+  db_test:
+    image: postgres:15
+    container_name: db_test
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER_TEST:-english_test}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD_TEST:-english_password_test}
+      POSTGRES_DB: ${POSTGRES_DB_TEST:-english_test}
+    ports:
+      - "5433:5432"
+
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    env_file:
+      - ./backend/.env

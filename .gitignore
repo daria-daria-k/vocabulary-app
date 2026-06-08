@@ -1,0 +1,27 @@
+# Секреты — НИКОГДА не должны попадать в репозиторий
+.env
+*.env
+!.env.example
+
+# Кэш и скомпилированные файлы Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Виртуальное окружение
+venv/
+.venv/
+env/
+
+# Кэш pytest
+.pytest_cache/
+
+# Настройки IDE
+.idea/
+.vscode/
+
+# Системные файлы macOS
+.DS_Store
+
+# Учебные / планировочные файлы
+ROADMAP.md
