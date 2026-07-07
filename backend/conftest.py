@@ -63,3 +63,23 @@ def auth_headers(client, registered_user):
 
     token = response.json()["access_token"]
     return {"Authorization": f"Bearer {token}"}
+
+
+@pytest.fixture
+def create_new_word(client, auth_headers):
+    response = client.post(
+        "/words",
+        json={
+            "word_en": "apple",
+            "translations": [{
+                "translation_ru": "яблоко"
+            }],
+            "examples": [
+                {
+                    "sentence": "I ate an apple"
+                }
+            ]
+        },
+        headers=auth_headers
+    )
+    return response
