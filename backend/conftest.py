@@ -66,7 +66,7 @@ def auth_headers(client, registered_user):
 
 
 @pytest.fixture
-def create_new_word(client, auth_headers):
+def created_word(client, auth_headers):
     response = client.post(
         "/words",
         json={
@@ -83,3 +83,18 @@ def create_new_word(client, auth_headers):
         headers=auth_headers
     )
     return response
+
+@pytest.fixture
+def auth_headers_second(client):
+    """Заголовки авторизации для второго пользователя (для тестов изоляции)"""
+    other_user = {"email": "other@mail.ru", "password": "test123"}
+    client.post(
+        "/auth/register",
+        json=other_user,
+    )
+    login = client.post(
+        "/auth/login",
+        json=other_user
+    )
+    token = login.json()["access_token"]
+    return {"Authorization": f"Bearer {token}"}

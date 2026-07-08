@@ -1,6 +1,6 @@
-def test_create_word(client, create_new_word, auth_headers):
+def test_create_word(created_word):
     """Создание слова с валидным токеном, возвращает id слова"""
-    response = create_new_word
+    response = created_word
 
     assert response.status_code == 200
     data = response.json()
@@ -50,9 +50,9 @@ def test_get_not_found_word(client, auth_headers):
     assert response.status_code == 404
 
 
-def test_get_one_word(client, create_new_word, auth_headers):
+def test_get_one_word(client, created_word, auth_headers):
     """Получение одного слова по id"""
-    response = create_new_word
+    response = created_word
 
     data = response.json()
     word_id = data["id"]
@@ -69,9 +69,9 @@ def test_get_one_word(client, create_new_word, auth_headers):
     assert len(new_word["examples"]) == 1
 
 
-def test_update_word(client, create_new_word, auth_headers):
+def test_update_word(client, created_word, auth_headers):
     """Обновление слова"""
-    response = create_new_word
+    response = created_word
 
     data = response.json()
     word_id = data["id"]
@@ -107,9 +107,9 @@ def test_update_word(client, create_new_word, auth_headers):
     assert len(new_data["examples"]) == 2
 
 
-def test_delete_word(client, create_new_word, auth_headers):
+def test_delete_word(client, created_word, auth_headers):
     """Удаление слова"""
-    response = create_new_word
+    response = created_word
 
     data = response.json()
     word_id = data["id"]
@@ -129,27 +129,50 @@ def test_delete_word(client, create_new_word, auth_headers):
     assert response_get_word.status_code == 404
 
 
-def test_isolation(client, create_new_word, auth_headers):
-    response = create_new_word
+def test_isolation(client, created_word, auth_headers_second):
+    """Пользователь не может получить чужое слово"""
+
+    response = created_word
 
     data = response.json()
     word_id = data["id"]
 
-    other_user = {"email": "other@mail.ru", "password": "test123"}
-    client.post(
-        "/auth/register",
-        json=other_user,
-    )
-    login = client.post(
-        "/auth/login",
-        json=other_user
-    )
-    token = login.json()["access_token"]
-    headers_2 = {"Authorization": f"Bearer {token}"}
-
     response = client.get(
         f"/words/{word_id}",
-        headers=headers_2,
+        headers=auth_headers_second,
     )
 
     assert response.status_code == 404
+
+
+def test_isolation_update(client, created_word, auth_headers_second):
+    """Пользователь не может обновить чужое слово"""
+    response = created_word
+
+    data = response.json()
+    word_id = data["id"]
+
+    response_update = client.put(
+        f"/words/{word_id}",
+        json={
+            "word_en": "hacked",
+            "translations": [{"translation_ru": "взломано"}],
+            "examples": [{"sentence": "hacked"}],
+        },
+        headers=auth_headers_second,
+    )
+
+    assert response_update.status_code == 404
+
+def test_isolation_delete(client, created_word, auth_headers_second):
+    """Пользователь не может удалить чужое слово"""
+    response = created_word
+    data = response.json()
+    word_id = data["id"]
+
+    response_delete = client.delete(
+        f"/words/{word_id}",
+        headers=auth_headers_second,
+    )
+
+    assert response_delete.status_code == 404
