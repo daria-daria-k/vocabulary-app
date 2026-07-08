@@ -176,3 +176,49 @@ def test_isolation_delete(client, created_word, auth_headers_second):
     )
 
     assert response_delete.status_code == 404
+
+
+def test_update_status(client, created_word, auth_headers):
+    """Успешная смена статуса слова"""
+    word_id = created_word.json()["id"]
+
+    response = client.patch(
+        f"/words/{word_id}/status",
+        json={
+            "status": "learning"
+        },
+        headers=auth_headers,
+    )
+
+    data = response.json()
+    assert response.status_code == 200
+    assert data["progress"]["status"] == "learning"
+
+
+def test_update_status_invalid(client, created_word, auth_headers):
+    """Ошибка смены статуса с неизвестным значением"""
+    word_id = created_word.json()["id"]
+
+    response = client.patch(
+        f"/words/{word_id}/status",
+        json={
+            "status": "invalid"
+        },
+        headers=auth_headers,
+    )
+
+    assert response.status_code == 422
+
+
+def test_update_status_isolation(client, created_word, auth_headers_second):
+    """Пользователь не может изменить статус чужого слова"""
+    word_id = created_word.json()["id"]
+    response = client.patch(
+        f"/words/{word_id}/status",
+        json={
+            "status": "learning"
+        },
+        headers=auth_headers_second,
+    )
+
+    assert response.status_code == 404

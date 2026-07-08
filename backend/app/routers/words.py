@@ -1,9 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.database import get_db
-from app.models import User
+from app.models import User, WordProgress
+from app.models.word_progress import WordStatus
 
-from app.schemas.word import WordCreate, WordUpdate, WordResponse
+from app.schemas.word import WordCreate, WordUpdate, WordResponse, WordStatusUpdate
 from app.models.word import Word
 from app.models.translation import Translation
 from app.models.example import Example
@@ -20,6 +21,7 @@ def add(word_data: WordCreate, db: Session = Depends(get_db), current_user: User
         word_en=word_data.word_en,
         translations=[Translation(translation_ru=t.translation_ru) for t in word_data.translations],
         examples=[Example(sentence=ex.sentence) for ex in word_data.examples],
+        progress=WordProgress(status=WordStatus.new)
     )
 
     db.add(new_word)
@@ -55,6 +57,18 @@ def update(word_id: int, word_data: WordUpdate, db: Session = Depends(get_db), c
     word.translations = [Translation(translation_ru=t.translation_ru) for t in word_data.translations]
     word.examples = [Example(sentence=ex.sentence) for ex in word_data.examples]
 
+    db.commit()
+    db.refresh(word)
+
+    return word
+
+@router.patch("/{word_id}/status", response_model=WordResponse)
+def update_status(word_id: int, status_data: WordStatusUpdate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    word = db.query(Word).filter(Word.id == word_id, Word.user_id == current_user.id).first()
+    if not word:
+        raise HTTPException(status_code=404, detail="Слово не найдено")
+
+    word.progress.status = status_data.status
     db.commit()
     db.refresh(word)
 

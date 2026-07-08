@@ -14,3 +14,4 @@ class Word(Base):
     created_at = Column(DateTime, nullable=False, default=datetime.datetime.utcnow)
     translations = relationship("Translation", back_populates="word", cascade="all, delete-orphan")
     examples = relationship("Example", back_populates="word", cascade="all, delete-orphan")
+    progress = relationship("WordProgress", back_populates="word", uselist=False, cascade="all, delete-orphan")
