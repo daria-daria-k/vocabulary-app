@@ -10,6 +10,7 @@ from app.models.translation import Translation
 from app.models.example import Example
 
 from app.utils.security import get_current_user
+from app.utils.words import get_owned_word_or_404
 
 router = APIRouter()
 
@@ -40,18 +41,14 @@ def get(db: Session = Depends(get_db), current_user: User = Depends(get_current_
 
 @router.get("/{word_id}", response_model=WordResponse)
 def get_one(word_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    word = db.query(Word).filter(Word.id == word_id, Word.user_id == current_user.id).first()
-    if not word:
-        raise HTTPException(status_code=404, detail="Слово не найдено")
+    word = get_owned_word_or_404(word_id, db, current_user)
 
     return word
 
 
 @router.put("/{word_id}", response_model=WordResponse)
 def update(word_id: int, word_data: WordUpdate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    word = db.query(Word).filter(Word.id == word_id, Word.user_id == current_user.id).first()
-    if not word:
-        raise HTTPException(status_code=404, detail="Слово не найдено")
+    word = get_owned_word_or_404(word_id, db, current_user)
 
     word.word_en = word_data.word_en
     word.translations = [Translation(translation_ru=t.translation_ru) for t in word_data.translations]
@@ -64,9 +61,7 @@ def update(word_id: int, word_data: WordUpdate, db: Session = Depends(get_db), c
 
 @router.patch("/{word_id}/status", response_model=WordResponse)
 def update_status(word_id: int, status_data: WordStatusUpdate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    word = db.query(Word).filter(Word.id == word_id, Word.user_id == current_user.id).first()
-    if not word:
-        raise HTTPException(status_code=404, detail="Слово не найдено")
+    word = get_owned_word_or_404(word_id, db, current_user)
 
     word.progress.status = status_data.status
     db.commit()
@@ -77,9 +72,7 @@ def update_status(word_id: int, status_data: WordStatusUpdate, db: Session = Dep
 
 @router.delete("/{word_id}", status_code=204)
 def delete(word_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    word = db.query(Word).filter(Word.id == word_id, Word.user_id == current_user.id).first()
-    if not word:
-        raise HTTPException(status_code=404, detail="Слово не найдено")
+    word = get_owned_word_or_404(word_id, db, current_user)
 
     db.delete(word)
     db.commit()

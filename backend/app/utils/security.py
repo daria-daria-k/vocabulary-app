@@ -20,20 +20,24 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 def hash_password(password: str) -> str:
+    """Создание хеша пароля"""
     return pwd_context.hash(password)
 
 
 def verify_password(password: str, hashed: str) -> bool:
+    """Верификация пароля"""
     return pwd_context.verify(password, hashed)
 
 
 def create_access_token(data: dict) -> str:
+    """Создание токена досупа"""
     token = jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
 
     return token
 
 
 def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security), db: Session = Depends(get_db)):
+    """Получение текущего пользователя"""
     token = credentials.credentials
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -47,3 +51,4 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(securit
         raise HTTPException(status_code=401, detail="Пользователь не найден")
 
     return user_exist
+

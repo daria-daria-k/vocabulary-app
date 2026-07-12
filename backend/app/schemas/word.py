@@ -1,4 +1,4 @@
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 from app.models.word_progress import WordStatus
 
@@ -29,13 +29,13 @@ class WordProgressResponse(BaseModel):
 
 class WordCreate(BaseModel):
     word_en: str
-    translations: list[TranslationCreate]
-    examples: list[ExampleCreate]
+    translations: list[TranslationCreate] = Field(min_length=1)
+    examples: list[ExampleCreate] = Field(default_factory=list)
 
 class WordUpdate(BaseModel):
     word_en: str
-    translations: list[TranslationCreate]
-    examples: list[ExampleCreate]
+    translations: list[TranslationCreate] = Field(min_length=1)
+    examples: list[ExampleCreate] = Field(default_factory=list)
 
 
 class WordStatusUpdate(BaseModel):

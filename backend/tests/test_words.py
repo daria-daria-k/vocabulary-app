@@ -222,3 +222,19 @@ def test_update_status_isolation(client, created_word, auth_headers_second):
     )
 
     assert response.status_code == 404
+
+
+def test_create_word_with_empty_translations(client, auth_headers):
+    """"Тест на валидацию пустого перевода"""
+    response = client.post(
+        "/words",
+        json={
+            "word_en": "apple",
+            "translations": [],
+            "examples": []
+        },
+        headers=auth_headers
+    )
+
+    assert response.status_code == 422
+
