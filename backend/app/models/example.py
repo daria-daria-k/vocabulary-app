@@ -7,6 +7,6 @@ class Example(Base):
     __tablename__ = "examples"
 
     id = Column(Integer, primary_key=True)
-    word_id = Column(Integer, ForeignKey("words.id", ondelete="CASCADE"), nullable=False)
+    word_id = Column(Integer, ForeignKey("words.id", ondelete="CASCADE"), nullable=False, index=True)
     sentence = Column(String, nullable=False)
     word = relationship("Word", back_populates="examples")

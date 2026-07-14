@@ -9,7 +9,7 @@ class Word(Base):
     __tablename__ = "words"
 
     id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     word_en = Column(String, nullable=False)
     created_at = Column(DateTime, nullable=False, default=datetime.datetime.utcnow)
     translations = relationship("Translation", back_populates="word", cascade="all, delete-orphan")
