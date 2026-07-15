@@ -9,6 +9,7 @@ import pytest
 
 from fastapi.testclient import TestClient
 from app.main import app
+from app.redis_client import redis_client
 
 load_dotenv()
 
@@ -98,3 +99,8 @@ def auth_headers_second(client):
     )
     token = login.json()["access_token"]
     return {"Authorization": f"Bearer {token}"}
+
+@pytest.fixture
+def clear_redis(autouse=True):
+    redis_client.flushdb()
+    yield

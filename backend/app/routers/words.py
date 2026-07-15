@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
+import json
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models import User, WordProgress
@@ -10,7 +11,9 @@ from app.models.translation import Translation
 from app.models.example import Example
 
 from app.utils.security import get_current_user
-from app.utils.words import get_owned_word_or_404
+from app.utils.words import get_owned_word_or_404, words_cache_key
+
+from app.redis_client import redis_client
 
 router = APIRouter()
 
@@ -27,6 +30,7 @@ def add(word_data: WordCreate, db: Session = Depends(get_db), current_user: User
 
     db.add(new_word)
     db.commit()
+    redis_client.delete(words_cache_key(current_user.id))
     db.refresh(new_word)
 
     return new_word
@@ -34,9 +38,17 @@ def add(word_data: WordCreate, db: Session = Depends(get_db), current_user: User
 
 @router.get("", response_model=list[WordResponse])
 def get(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+
+    cached = redis_client.get(words_cache_key(current_user.id))
+    if cached is not None:
+        return json.loads(cached)
+
     words = db.query(Word).filter(Word.user_id == current_user.id).all()
 
-    return words
+    data = [WordResponse.model_validate(w).model_dump(mode="json") for w in words]
+    redis_client.set(words_cache_key(current_user.id), json.dumps(data, ensure_ascii=False), ex=60 * 90)
+
+    return data
 
 
 @router.get("/{word_id}", response_model=WordResponse)
@@ -55,6 +67,7 @@ def update(word_id: int, word_data: WordUpdate, db: Session = Depends(get_db), c
     word.examples = [Example(sentence=ex.sentence) for ex in word_data.examples]
 
     db.commit()
+    redis_client.delete(words_cache_key(current_user.id))
     db.refresh(word)
 
     return word
@@ -65,6 +78,7 @@ def update_status(word_id: int, status_data: WordStatusUpdate, db: Session = Dep
 
     word.progress.status = status_data.status
     db.commit()
+    redis_client.delete(words_cache_key(current_user.id))
     db.refresh(word)
 
     return word
@@ -76,6 +90,7 @@ def delete(word_id: int, db: Session = Depends(get_db), current_user: User = Dep
 
     db.delete(word)
     db.commit()
+    redis_client.delete(words_cache_key(current_user.id))
 
 
 

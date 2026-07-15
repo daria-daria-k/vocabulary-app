@@ -12,3 +12,7 @@ def get_owned_word_or_404(word_id: int, db: Session, current_user: User) -> Word
     if not word:
         raise HTTPException(status_code=404, detail="Слово не найдено")
     return word
+
+def words_cache_key(user_id: int) -> str:
+    """Наименование ключа кеша"""
+    return f"words:user:{user_id}"
