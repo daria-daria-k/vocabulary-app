@@ -238,3 +238,10 @@ def test_create_word_with_empty_translations(client, auth_headers):
 
     assert response.status_code == 422
 
+def test_get_words_list(client, created_word, auth_headers):
+    """Список слов возвращает созданное слово"""
+    response = client.get("/words", headers=auth_headers)
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data) == 1
+    assert data[0]["word_en"] == "apple"

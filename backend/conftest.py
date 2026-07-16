@@ -1,15 +1,16 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.database import Base, get_db
+from app.redis_client import get_redis
 
 import os
 from dotenv import load_dotenv
 
 import pytest
+import fakeredis
 
 from fastapi.testclient import TestClient
 from app.main import app
-from app.redis_client import redis_client
 
 load_dotenv()
 
@@ -33,10 +34,14 @@ def test_db():
     yield
     Base.metadata.drop_all(engine)
 
+@pytest.fixture
+def fake_redis():
+    return fakeredis.FakeRedis(decode_responses=True)
 
 @pytest.fixture
-def client(test_db):
+def client(test_db, fake_redis):
     app.dependency_overrides[get_db] = override_get_db
+    app.dependency_overrides[get_redis] = lambda: fake_redis
     yield TestClient(app)
     app.dependency_overrides.clear()
 
@@ -99,8 +104,3 @@ def auth_headers_second(client):
     )
     token = login.json()["access_token"]
     return {"Authorization": f"Bearer {token}"}
-
-@pytest.fixture
-def clear_redis(autouse=True):
-    redis_client.flushdb()
-    yield
