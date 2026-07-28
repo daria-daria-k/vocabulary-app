@@ -59,3 +59,32 @@ def test_me_with_token(client, auth_headers):
 
     assert response.status_code == 200
     assert response.json()["email"] is not None
+
+def test_login_rate_limit(client, registered_user):
+    """После 5 неудачных попыток вход блокируется (429)"""
+    wrong = {"email": registered_user["email"], "password": "неверный"}
+
+    for _ in range(5):
+        response = client.post("/auth/login", json=wrong)
+        assert response.status_code == 401
+
+    response = client.post("/auth/login", json=wrong)
+    assert response.status_code == 429
+
+
+def test_login_reset_rate_limit(client, registered_user):
+    """Сброс кеша redis при одной из удачных попыток входа"""
+    wrong = {"email": registered_user["email"], "password": ""}
+    success = {"email": registered_user["email"], "password": registered_user["password"]}
+
+    for _ in range(4):
+        response = client.post("/auth/login", json=wrong)
+        assert response.status_code == 401
+
+    response = client.post("/auth/login", json=success)
+    assert response.status_code == 200
+
+    for _ in range(3):
+        response = client.post("/auth/login", json=wrong)
+        assert response.status_code == 401
+

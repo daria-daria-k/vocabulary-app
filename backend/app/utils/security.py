@@ -15,7 +15,6 @@ ALGORITHM = "HS256"
 
 security = HTTPBearer()
 
-
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
@@ -52,3 +51,13 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(securit
 
     return user_exist
 
+
+def too_many_attempts(redis, key, limit) -> bool:
+    attempts = redis.get(key)
+    return attempts is not None and int(attempts) >= limit
+
+
+def register_attempt(redis, key, window_seconds):
+    count = redis.incr(key)
+    if count == 1:
+        redis.expire(key, window_seconds)
