@@ -1,0 +1,146 @@
+<style>
+  #vocab-dictionary {
+    --dict-ink: light-dark(#17152f, #f5f3ff);
+    --dict-muted: light-dark(#6d6a80, #aaa5bd);
+    --dict-canvas: light-dark(#f7f6ff, #12111c);
+    --dict-surface: light-dark(#ffffff, #1c1a29);
+    --dict-line: light-dark(#e5e1f1, #39354b);
+    --dict-violet: light-dark(#6554d9, #9b8cff);
+    --dict-violet-dark: light-dark(#40329e, #7564e8);
+    --dict-violet-soft: light-dark(#ebe8ff, #2e294c);
+    --dict-coral: light-dark(#ff7d67, #ff9b89);
+    --dict-lime: light-dark(#d8ef7d, #b7d85c);
+    --dict-mint: light-dark(#d9f5eb, #21473c);
+    width: 100%; color: var(--dict-ink); font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  }
+  #vocab-dictionary * { box-sizing: border-box; }
+  #vocab-dictionary .app { min-height: 650px; overflow: hidden; border: 1px solid var(--dict-line); border-radius: 22px; background: var(--dict-canvas); }
+  #vocab-dictionary .topbar { height: 66px; padding: 0 26px; display: flex; align-items: center; justify-content: space-between; background: var(--dict-surface); border-bottom: 1px solid var(--dict-line); }
+  #vocab-dictionary .brand { display: flex; align-items: center; gap: 10px; font-weight: 500; }
+  #vocab-dictionary .logo { width: 34px; height: 34px; border-radius: 11px; display: block; object-fit: cover; box-shadow: 0 8px 20px color-mix(in srgb, var(--dict-violet) 25%, transparent); }
+  #vocab-dictionary .nav { display: flex; align-items: center; gap: 4px; }
+  #vocab-dictionary .nav a { color: var(--dict-muted); padding: 8px 11px; border-radius: 10px; text-decoration: none; transition: color 160ms ease, background-color 160ms ease, transform 160ms ease; }
+  #vocab-dictionary .nav a:hover { color: var(--dict-violet-dark); background: var(--dict-violet-soft); transform: translateY(-1px); }
+  #vocab-dictionary .nav .active { color: var(--dict-violet-dark); background: var(--dict-violet-soft); }
+  #vocab-dictionary .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--dict-lime); color: #353b18; display: grid; place-items: center; font-weight: 500; }
+  #vocab-dictionary .page { max-width: 1000px; margin: 0 auto; padding: 30px 28px 36px; }
+  #vocab-dictionary .heading { display: flex; justify-content: space-between; align-items: flex-end; gap: 18px; }
+  #vocab-dictionary .heading-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+  #vocab-dictionary .eyebrow { color: var(--dict-violet); text-transform: uppercase; letter-spacing: .09em; font-size: 12px; font-weight: 500; }
+  #vocab-dictionary h2 { margin: 7px 0 5px; font-size: 30px; line-height: 1.15; font-weight: 500; }
+  #vocab-dictionary h3 { margin: 0; font-weight: 500; }
+  #vocab-dictionary p { margin: 0; color: var(--dict-muted); }
+  #vocab-dictionary button, #vocab-dictionary input { font: inherit; }
+  #vocab-dictionary button { cursor: pointer; }
+  #vocab-dictionary .add { border: 1px solid var(--dict-violet); background: var(--dict-violet); color: #fff; border-radius: 12px; padding: 10px 14px; display: inline-flex; align-items: center; gap: 8px; }
+  #vocab-dictionary .add-mark { width: 21px; height: 21px; border-radius: 7px; display: grid; place-items: center; background: #fff; color: var(--dict-violet-dark); }
+  #vocab-dictionary .upload { border: 1px solid var(--dict-line); background: var(--dict-surface); color: var(--dict-ink); border-radius: 12px; padding: 10px 14px; display: inline-flex; align-items: center; gap: 8px; }
+  #vocab-dictionary .upload svg { color: var(--dict-violet-dark); }
+  #vocab-dictionary .add, #vocab-dictionary .upload { transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease, border-color 160ms ease; }
+  #vocab-dictionary .add:hover { transform: translateY(-2px); background: var(--dict-violet-dark); border-color: var(--dict-violet-dark); box-shadow: 0 8px 18px color-mix(in srgb, var(--dict-violet) 25%, transparent); }
+  #vocab-dictionary .upload:hover { transform: translateY(-2px); border-color: var(--dict-violet); background: var(--dict-violet-soft); box-shadow: 0 8px 18px color-mix(in srgb, var(--dict-violet) 12%, transparent); }
+  #vocab-dictionary .summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 24px; }
+  #vocab-dictionary .summary-item { padding: 14px 15px; border: 1px solid var(--dict-line); border-radius: 15px; background: var(--dict-surface); }
+  #vocab-dictionary .summary-item strong { display: block; font-size: 22px; margin-bottom: 2px; }
+  #vocab-dictionary .summary-item span { color: var(--dict-muted); font-size: 12px; }
+  #vocab-dictionary .summary-item.learning { background: var(--dict-violet-soft); border-color: transparent; }
+  #vocab-dictionary .summary-item.learned { background: var(--dict-mint); border-color: transparent; }
+  #vocab-dictionary .toolbar { display: flex; gap: 10px; align-items: center; margin: 18px 0 14px; }
+  #vocab-dictionary .search { flex: 1; min-width: 160px; position: relative; }
+  #vocab-dictionary .search svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--dict-muted); width: 20px; height: 20px; pointer-events: none; }
+  #vocab-dictionary .search input { width: 100%; height: 42px; border: 1px solid var(--dict-line); border-radius: 12px; padding: 0 14px 0 44px; background: var(--dict-surface); color: var(--dict-ink); }
+  #vocab-dictionary .filter { border: 1px solid var(--dict-line); border-radius: 12px; padding: 10px 13px; background: var(--dict-surface); color: var(--dict-ink); }
+  #vocab-dictionary .filter.active { color: var(--dict-violet-dark); background: var(--dict-violet-soft); border-color: transparent; }
+  #vocab-dictionary .filter { transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease, transform 150ms ease; }
+  #vocab-dictionary .filter:hover { color: var(--dict-violet-dark); background: var(--dict-violet-soft); border-color: var(--dict-violet); transform: translateY(-1px); }
+  #vocab-dictionary .search input { transition: border-color 150ms ease, box-shadow 150ms ease; }
+  #vocab-dictionary .search input:hover { border-color: var(--dict-violet); }
+  #vocab-dictionary .search input:focus { border-color: var(--dict-violet); box-shadow: 0 0 0 3px color-mix(in srgb, var(--dict-violet) 17%, transparent); outline: none; }
+  #vocab-dictionary .list-head { display: grid; grid-template-columns: 1.1fr 1.25fr 1.5fr 110px 32px; gap: 16px; padding: 10px 16px; color: var(--dict-muted); font-size: 11px; text-transform: uppercase; letter-spacing: .06em; }
+  #vocab-dictionary .word-list { background: var(--dict-surface); border: 1px solid var(--dict-line); border-radius: 18px; overflow: hidden; }
+  #vocab-dictionary .word-row { display: grid; grid-template-columns: 1.1fr 1.25fr 1.5fr 110px 32px; gap: 16px; align-items: center; padding: 16px; border-bottom: 1px solid var(--dict-line); transition: background-color 150ms ease; }
+  #vocab-dictionary .word-row:last-child { border-bottom: 0; }
+  #vocab-dictionary .word-row:hover { background: color-mix(in srgb, var(--dict-violet-soft) 45%, var(--dict-surface)); }
+  #vocab-dictionary .english { display: flex; align-items: center; gap: 10px; }
+  #vocab-dictionary .sound { width: 28px; height: 28px; border: 0; border-radius: 9px; background: var(--dict-violet-soft); color: var(--dict-violet-dark); transition: transform 150ms ease, background-color 150ms ease, color 150ms ease; }
+  #vocab-dictionary .sound:hover { transform: scale(1.08); background: var(--dict-violet); color: #fff; }
+  #vocab-dictionary .translation { color: var(--dict-ink); display: flex; flex-wrap: wrap; gap: 5px; }
+  #vocab-dictionary .translation span { padding: 4px 7px; border-radius: 8px; background: var(--dict-violet-soft); line-height: 1.2; }
+  #vocab-dictionary .example { color: var(--dict-muted); font-style: italic; }
+  #vocab-dictionary .status { justify-self: start; border: 0; padding: 6px 9px; border-radius: 999px; font-size: 11px; }
+  #vocab-dictionary .status.learning { background: var(--dict-violet-soft); color: var(--dict-violet-dark); }
+  #vocab-dictionary .status.new { background: color-mix(in srgb, var(--dict-coral) 18%, var(--dict-surface)); color: var(--dict-ink); }
+  #vocab-dictionary .status.learned { background: var(--dict-mint); color: var(--dict-ink); }
+  #vocab-dictionary .status { transition: transform 150ms ease, filter 150ms ease; }
+  #vocab-dictionary .status:hover { transform: translateY(-1px); filter: saturate(1.25); }
+  #vocab-dictionary .more { border: 0; background: transparent; color: var(--dict-muted); font-size: 20px; border-radius: 8px; transition: color 150ms ease, background-color 150ms ease; }
+  #vocab-dictionary .more:hover { color: var(--dict-violet-dark); background: var(--dict-violet-soft); }
+  #vocab-dictionary button:focus-visible, #vocab-dictionary a:focus-visible { outline: 3px solid color-mix(in srgb, var(--dict-violet) 35%, transparent); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) {
+    #vocab-dictionary .nav a, #vocab-dictionary button, #vocab-dictionary input, #vocab-dictionary .word-row { transition: none; }
+    #vocab-dictionary .nav a:hover, #vocab-dictionary button:hover { transform: none; }
+  }
+  #vocab-dictionary .mobile-meta { display: none; }
+  @media (max-width: 760px) {
+    #vocab-dictionary .app { min-height: 0; }
+    #vocab-dictionary .topbar { padding: 0 14px; }
+    #vocab-dictionary .nav a:not(.active) { display: none; }
+    #vocab-dictionary .page { padding: 22px 14px 28px; }
+    #vocab-dictionary .heading { align-items: flex-start; }
+    #vocab-dictionary .summary { grid-template-columns: 1fr 1fr; }
+    #vocab-dictionary .toolbar { flex-wrap: wrap; }
+    #vocab-dictionary .search { flex-basis: 100%; }
+    #vocab-dictionary .list-head { display: none; }
+    #vocab-dictionary .word-list { background: transparent; border: 0; display: grid; gap: 10px; overflow: visible; }
+    #vocab-dictionary .word-row { grid-template-columns: 1fr auto; gap: 8px 12px; border: 1px solid var(--dict-line); border-radius: 15px; background: var(--dict-surface); }
+    #vocab-dictionary .translation { grid-column: 1; }
+    #vocab-dictionary .example { grid-column: 1 / -1; }
+    #vocab-dictionary .status { grid-column: 2; grid-row: 1; }
+    #vocab-dictionary .more { grid-column: 2; grid-row: 2; }
+  }
+  @media (max-width: 470px) {
+    #vocab-dictionary .heading { flex-direction: column; }
+    #vocab-dictionary .heading-actions { width: 100%; justify-content: stretch; }
+    #vocab-dictionary .add, #vocab-dictionary .upload { flex: 1; justify-content: center; }
+    #vocab-dictionary .filter { flex: 1; }
+  }
+</style>
+
+<div id="vocab-dictionary">
+  <section class="app">
+    <header class="topbar">
+      <div class="brand"><img class="logo" src="../frontend/public/app-icon.png" alt=""> Vocab</div>
+      <nav class="nav" aria-label="Основная навигация"><a href="#overview">Обзор</a><a href="#words" class="active" aria-current="page">Слова</a><a href="#training">Тренировка</a></nav>
+      <div class="avatar" aria-label="Профиль">Д</div>
+    </header>
+    <main class="page">
+      <div class="heading">
+        <div><div class="eyebrow">Моя коллекция</div><h2>Словарь</h2><p>Сохраняйте слова и наблюдайте, как они становятся знакомыми.</p></div>
+        <div class="heading-actions">
+          <button class="add"><span class="add-mark">＋</span>Добавить слово</button>
+          <button class="upload"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"></path><path d="M14 2v6h6"></path><path d="M12 18v-6"></path><path d="m9 15 3 3 3-3"></path></svg>Загрузить из файла</button>
+        </div>
+      </div>
+
+      <section class="summary" aria-label="Статистика словаря">
+        <div class="summary-item"><strong>50</strong><span>всего слов</span></div>
+        <div class="summary-item"><strong>4</strong><span>новых</span></div>
+        <div class="summary-item learning"><strong>12</strong><span>в изучении</span></div>
+        <div class="summary-item learned"><strong>34</strong><span>выучено</span></div>
+      </section>
+
+      <div class="toolbar">
+        <label class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg><input type="search" placeholder="Найти слово или перевод" aria-label="Поиск по словарю"></label>
+        <button class="filter active">Все</button><button class="filter">Учу</button><button class="filter">Выучено</button>
+      </div>
+
+      <div class="list-head"><span>Слово</span><span>Перевод</span><span>Пример</span><span>Статус</span><span></span></div>
+      <section class="word-list" aria-label="Список слов">
+        <article class="word-row"><div class="english"><button class="sound" aria-label="Показать перевод: curious"><svg viewBox="0 0 28 28" width="19" height="19" fill="none" aria-hidden="true"><path d="M3.5 4.5h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-5l-3.5 3v-3H5.5a2 2 0 0 1-2-2v-10Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path><path d="M17.5 10.5h5a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-1.5v3l-3.5-3h-5a2 2 0 0 1-2-2v-4" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path><text x="8" y="13.6" fill="currentColor" font-size="9" font-family="Arial, sans-serif" font-weight="700">A</text><text x="16.2" y="19.3" fill="currentColor" font-size="7" font-family="Arial, sans-serif">文</text></svg></button><strong>curious</strong></div><div class="translation"><span>любопытный</span><span>любознательный</span></div><div class="example">She was curious about the new place.</div><button class="status learning">Учу</button><button class="more" aria-label="Действия со словом curious">···</button></article>
+        <article class="word-row"><div class="english"><button class="sound" aria-label="Показать перевод: effort"><svg viewBox="0 0 28 28" width="19" height="19" fill="none" aria-hidden="true"><path d="M3.5 4.5h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-5l-3.5 3v-3H5.5a2 2 0 0 1-2-2v-10Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path><path d="M17.5 10.5h5a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-1.5v3l-3.5-3h-5a2 2 0 0 1-2-2v-4" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path><text x="8" y="13.6" fill="currentColor" font-size="9" font-family="Arial, sans-serif" font-weight="700">A</text><text x="16.2" y="19.3" fill="currentColor" font-size="7" font-family="Arial, sans-serif">文</text></svg></button><strong>effort</strong></div><div class="translation"><span>усилие</span><span>попытка</span></div><div class="example">Learning a language takes effort.</div><button class="status learning">Учу</button><button class="more" aria-label="Действия со словом effort">···</button></article>
+        <article class="word-row"><div class="english"><button class="sound" aria-label="Показать перевод: journey"><svg viewBox="0 0 28 28" width="19" height="19" fill="none" aria-hidden="true"><path d="M3.5 4.5h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-5l-3.5 3v-3H5.5a2 2 0 0 1-2-2v-10Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path><path d="M17.5 10.5h5a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-1.5v3l-3.5-3h-5a2 2 0 0 1-2-2v-4" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path><text x="8" y="13.6" fill="currentColor" font-size="9" font-family="Arial, sans-serif" font-weight="700">A</text><text x="16.2" y="19.3" fill="currentColor" font-size="7" font-family="Arial, sans-serif">文</text></svg></button><strong>journey</strong></div><div class="translation"><span>путешествие</span><span>поездка</span><span>путь</span></div><div class="example">Every journey begins with one step.</div><button class="status new">Новое</button><button class="more" aria-label="Действия со словом journey">···</button></article>
+        <article class="word-row"><div class="english"><button class="sound" aria-label="Показать перевод: improve"><svg viewBox="0 0 28 28" width="19" height="19" fill="none" aria-hidden="true"><path d="M3.5 4.5h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-5l-3.5 3v-3H5.5a2 2 0 0 1-2-2v-10Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path><path d="M17.5 10.5h5a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-1.5v3l-3.5-3h-5a2 2 0 0 1-2-2v-4" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"></path><text x="8" y="13.6" fill="currentColor" font-size="9" font-family="Arial, sans-serif" font-weight="700">A</text><text x="16.2" y="19.3" fill="currentColor" font-size="7" font-family="Arial, sans-serif">文</text></svg></button><strong>improve</strong></div><div class="translation"><span>улучшать</span><span>совершенствовать</span></div><div class="example">Practice will improve your English.</div><button class="status learned">Выучено</button><button class="more" aria-label="Действия со словом improve">···</button></article>
+      </section>
+    </main>
+  </section>
+</div>

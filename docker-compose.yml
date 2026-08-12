@@ -10,6 +10,8 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-english}
     ports:
       - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
 
   db_test:
     image: postgres:15
@@ -35,3 +37,6 @@ services:
       - db
     env_file:
       - ./backend/.env
+
+volumes:
+  db_data:

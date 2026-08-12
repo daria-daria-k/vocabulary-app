@@ -13,3 +13,4 @@ httpx
 bcrypt<4.1
 redis
 fakeredis
+email-validator

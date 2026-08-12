@@ -88,3 +88,50 @@ def test_login_reset_rate_limit(client, registered_user):
         response = client.post("/auth/login", json=wrong)
         assert response.status_code == 401
 
+def test_register_weak_password(client):
+    """Слабый пароль (короткий, без цифры) отклоняется с 422"""
+    response = client.post(
+        "/auth/register",
+        json={"email": "test@mail.ru", "password": "123fg"}
+    )
+
+    assert response.status_code == 422
+
+
+def test_register_only_words_password(client):
+    """Слабый пароль (только буквы) отклоняется с 422"""
+    response = client.post(
+        "/auth/register",
+        json={"email": "test@mail.ru", "password": "jfhytghnbc"}
+    )
+
+    assert response.status_code == 422
+
+
+def test_register_only_numbers_password(client):
+    """Слабый пароль (только цифры) отклоняется с 422"""
+    response = client.post(
+        "/auth/register",
+        json={"email": "test@mail.ru", "password": "123456789"}
+    )
+
+    assert response.status_code == 422
+
+
+def test_register_valid_password(client):
+    """Слабый пароль (только цифры) отклоняется с 422"""
+    response = client.post(
+        "/auth/register",
+        json={"email": "test@mail.ru", "password": "test1234ik"}
+    )
+
+    assert response.status_code == 200
+
+
+def test_register_invalid_email(client):
+    """Некорректный email отклоняется с 422"""
+    response = client.post(
+        "/auth/register",
+        json={"email": "email", "password": "test123kihyb"}
+    )
+    assert response.status_code == 422

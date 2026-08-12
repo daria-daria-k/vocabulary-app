@@ -1,0 +1,129 @@
+<style>
+  #vocab-auth {
+    --auth-ink: light-dark(#17152f, #f5f3ff);
+    --auth-muted: light-dark(#6d6a80, #aaa5bd);
+    --auth-canvas: light-dark(#f7f6ff, #12111c);
+    --auth-surface: light-dark(#ffffff, #1c1a29);
+    --auth-line: light-dark(#e5e1f1, #39354b);
+    --auth-violet: light-dark(#6554d9, #9b8cff);
+    --auth-violet-dark: light-dark(#40329e, #7564e8);
+    --auth-violet-soft: light-dark(#ebe8ff, #2e294c);
+    --auth-coral: light-dark(#ff7d67, #ff9b89);
+    --auth-lime: light-dark(#d8ef7d, #b7d85c);
+    width: 100%; color: var(--auth-ink); font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  }
+  #vocab-auth * { box-sizing: border-box; }
+  #vocab-auth button, #vocab-auth input { font: inherit; }
+  #vocab-auth button { cursor: pointer; }
+  #vocab-auth .auth-window { min-height: 610px; display: grid; grid-template-columns: .95fr 1.05fr; overflow: hidden; border: 1px solid var(--auth-line); border-radius: 22px; background: var(--auth-surface); }
+  #vocab-auth .story { position: relative; overflow: hidden; padding: 34px; color: #fff; background: linear-gradient(145deg, var(--auth-violet-dark), var(--auth-violet) 60%, #8d70e7); display: flex; flex-direction: column; justify-content: space-between; }
+  #vocab-auth .story::before { content: ''; position: absolute; width: 260px; height: 260px; top: -110px; right: -90px; border-radius: 50%; border: 42px solid color-mix(in srgb, var(--auth-coral) 78%, transparent); transform: rotate(-12deg); }
+  #vocab-auth .story::after { content: ''; position: absolute; width: 170px; height: 170px; left: -85px; bottom: -70px; border-radius: 50%; background: color-mix(in srgb, var(--auth-lime) 82%, transparent); }
+  #vocab-auth .brand { position: relative; z-index: 1; display: flex; align-items: center; gap: 10px; font-weight: 500; }
+  #vocab-auth .logo { width: 36px; height: 36px; border-radius: 12px; display: block; object-fit: cover; box-shadow: 0 8px 20px color-mix(in srgb, #17152f 25%, transparent); }
+  #vocab-auth .story-copy { position: relative; z-index: 1; max-width: 390px; margin: auto 0; }
+  #vocab-auth .story-copy h2 { margin: 0 0 12px; font-size: 35px; line-height: 1.12; font-weight: 500; }
+  #vocab-auth .story-copy p { margin: 0; color: #e4e0ff; font-size: 16px; }
+  #vocab-auth .word-card { position: relative; z-index: 1; align-self: flex-start; min-width: 210px; padding: 14px 16px; border-radius: 15px; background: color-mix(in srgb, #fff 14%, transparent); border: 1px solid color-mix(in srgb, #fff 24%, transparent); backdrop-filter: blur(8px); }
+  #vocab-auth .word-card strong { display: block; margin-bottom: 4px; font-size: 18px; }
+  #vocab-auth .word-card span { color: #e4e0ff; font-size: 13px; }
+  #vocab-auth .form-side { background: var(--auth-surface); padding: 36px 44px; display: grid; align-content: center; }
+  #vocab-auth .form-wrap { width: 100%; max-width: 390px; margin: 0 auto; }
+  #vocab-auth .mode-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; padding: 5px; margin-bottom: 26px; border-radius: 14px; background: var(--auth-canvas); border: 1px solid var(--auth-line); }
+  #vocab-auth .mode-tab { padding: 9px 12px; border: 0; border-radius: 10px; background: transparent; color: var(--auth-muted); transition: color 150ms ease, background-color 150ms ease, box-shadow 150ms ease; }
+  #vocab-auth .mode-tab:hover { color: var(--auth-violet-dark); background: var(--auth-violet-soft); }
+  #vocab-auth .mode-tab.active { color: #fff; background: var(--auth-violet); box-shadow: 0 6px 14px color-mix(in srgb, var(--auth-violet) 20%, transparent); }
+  #vocab-auth .form-panel { display: none; }
+  #vocab-auth .form-panel.active { display: block; }
+  #vocab-auth .eyebrow { color: var(--auth-violet); text-transform: uppercase; letter-spacing: .09em; font-size: 12px; font-weight: 500; }
+  #vocab-auth h3 { margin: 7px 0 7px; font-size: 28px; line-height: 1.15; font-weight: 500; }
+  #vocab-auth p { margin: 0; color: var(--auth-muted); }
+  #vocab-auth form { display: grid; gap: 15px; margin-top: 24px; }
+  #vocab-auth .field { display: grid; gap: 7px; }
+  #vocab-auth .field-head { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
+  #vocab-auth label { font-size: 13px; font-weight: 500; }
+  #vocab-auth .field-link { border: 0; padding: 0; color: var(--auth-violet); background: transparent; font-size: 12px; }
+  #vocab-auth .field-link:hover { color: var(--auth-violet-dark); text-decoration: underline; }
+  #vocab-auth .input-wrap { position: relative; }
+  #vocab-auth input { width: 100%; height: 47px; padding: 0 42px 0 14px; border-radius: 12px; border: 1px solid var(--auth-line); color: var(--auth-ink); background: var(--auth-canvas); transition: border-color 150ms ease, box-shadow 150ms ease, background-color 150ms ease; }
+  #vocab-auth input:hover { border-color: var(--auth-violet); }
+  #vocab-auth input:focus { outline: none; border-color: var(--auth-violet); background: var(--auth-surface); box-shadow: 0 0 0 3px color-mix(in srgb, var(--auth-violet) 17%, transparent); }
+  #vocab-auth .password-toggle { position: absolute; top: 50%; right: 8px; transform: translateY(-50%); width: 32px; height: 32px; display: grid; place-items: center; border: 0; border-radius: 9px; color: var(--auth-muted); background: transparent; transition: color 150ms ease, background-color 150ms ease; }
+  #vocab-auth .password-toggle:hover { color: var(--auth-violet-dark); background: var(--auth-violet-soft); }
+  #vocab-auth .password-toggle svg { width: 18px; height: 18px; }
+  #vocab-auth .submit { height: 48px; border: 0; border-radius: 12px; color: #fff; background: var(--auth-violet); font-weight: 500; transition: transform 150ms ease, background-color 150ms ease, box-shadow 150ms ease; }
+  #vocab-auth .submit:hover { transform: translateY(-2px); background: var(--auth-violet-dark); box-shadow: 0 8px 18px color-mix(in srgb, var(--auth-violet) 25%, transparent); }
+  #vocab-auth .terms { font-size: 11px; line-height: 1.45; text-align: center; color: var(--auth-muted); }
+  #vocab-auth .terms a { color: var(--auth-violet); text-decoration: none; }
+  #vocab-auth .terms a:hover { text-decoration: underline; }
+  #vocab-auth button:focus-visible, #vocab-auth a:focus-visible { outline: 3px solid color-mix(in srgb, var(--auth-violet) 35%, transparent); outline-offset: 2px; }
+  @media (max-width: 760px) {
+    #vocab-auth .auth-window { grid-template-columns: 1fr; min-height: 0; }
+    #vocab-auth .story { min-height: 210px; padding: 24px; }
+    #vocab-auth .story-copy { margin: 30px 0 0; }
+    #vocab-auth .story-copy h2 { font-size: 28px; }
+    #vocab-auth .word-card { display: none; }
+    #vocab-auth .form-side { padding: 28px 20px 34px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #vocab-auth button, #vocab-auth input, #vocab-auth a { transition: none; }
+    #vocab-auth button:hover { transform: none; }
+  }
+</style>
+
+<div id="vocab-auth">
+  <section class="auth-window">
+    <aside class="story">
+      <div class="brand"><img class="logo" src="../frontend/public/app-icon.png" alt=""> Vocab</div>
+      <div class="story-copy"><h2>Новые слова становятся частью вашей речи.</h2><p>Сохраняйте, повторяйте и наблюдайте за прогрессом каждый день.</p></div>
+      <div class="word-card"><strong>curiosity</strong><span>любопытство · слово дня</span></div>
+    </aside>
+
+    <main class="form-side">
+      <div class="form-wrap">
+        <div class="mode-tabs" role="tablist" aria-label="Авторизация"><button class="mode-tab active" role="tab" aria-selected="true" data-mode="login">Вход</button><button class="mode-tab" role="tab" aria-selected="false" data-mode="register">Регистрация</button></div>
+
+        <section class="form-panel active" data-panel="login">
+          <div class="eyebrow">С возвращением</div><h3>Продолжим обучение?</h3><p>Войдите, чтобы открыть свой словарь.</p>
+          <form>
+            <div class="field"><label for="login-email">Email</label><input id="login-email" type="email" placeholder="you@example.com"></div>
+            <div class="field"><div class="field-head"><label for="login-password">Пароль</label><button class="field-link" type="button">Забыли пароль?</button></div><div class="input-wrap"><input id="login-password" type="password" placeholder="Введите пароль"><button class="password-toggle" type="button" aria-label="Показать пароль"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.1 12s3.6-7 9.9-7 9.9 7 9.9 7-3.6 7-9.9 7-9.9-7-9.9-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></div></div>
+            <button class="submit" type="button">Войти →</button>
+          </form>
+        </section>
+
+        <section class="form-panel" data-panel="register">
+          <div class="eyebrow">Начните сегодня</div><h3>Создать аккаунт</h3><p>Первое занятие займёт всего пять минут.</p>
+          <form>
+            <div class="field"><label for="register-email">Email</label><input id="register-email" type="email" placeholder="you@example.com"></div>
+            <div class="field"><label for="register-password">Пароль</label><div class="input-wrap"><input id="register-password" type="password" placeholder="Не менее 8 символов"><button class="password-toggle" type="button" aria-label="Показать пароль"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.1 12s3.6-7 9.9-7 9.9 7 9.9 7-3.6 7-9.9 7-9.9-7-9.9-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></div></div>
+            <button class="submit" type="button">Создать аккаунт →</button>
+            <div class="terms">Продолжая, вы принимаете <a href="#terms">условия использования</a> и <a href="#privacy">политику конфиденциальности</a>.</div>
+          </form>
+        </section>
+      </div>
+    </main>
+  </section>
+</div>
+
+<script>
+  (() => {
+    const root = document.getElementById('vocab-auth');
+    const tabs = [...root.querySelectorAll('.mode-tab')];
+    const panels = [...root.querySelectorAll('.form-panel')];
+    tabs.forEach((tab) => tab.addEventListener('click', () => {
+      tabs.forEach((item) => {
+        const selected = item === tab;
+        item.classList.toggle('active', selected);
+        item.setAttribute('aria-selected', String(selected));
+      });
+      panels.forEach((panel) => panel.classList.toggle('active', panel.dataset.panel === tab.dataset.mode));
+    }));
+    root.querySelectorAll('.password-toggle').forEach((button) => button.addEventListener('click', () => {
+      const input = button.parentElement.querySelector('input');
+      const reveal = input.type === 'password';
+      input.type = reveal ? 'text' : 'password';
+      button.setAttribute('aria-label', reveal ? 'Скрыть пароль' : 'Показать пароль');
+    }));
+  })();
+</script>

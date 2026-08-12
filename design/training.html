@@ -1,0 +1,211 @@
+<style>
+  #vocab-training {
+    --train-ink: light-dark(#17152f, #f5f3ff);
+    --train-muted: light-dark(#6d6a80, #aaa5bd);
+    --train-canvas: light-dark(#f7f6ff, #12111c);
+    --train-surface: light-dark(#ffffff, #1c1a29);
+    --train-line: light-dark(#e5e1f1, #39354b);
+    --train-violet: light-dark(#6554d9, #9b8cff);
+    --train-violet-dark: light-dark(#40329e, #7564e8);
+    --train-violet-soft: light-dark(#ebe8ff, #2e294c);
+    --train-coral: light-dark(#ff7d67, #ff9b89);
+    --train-lime: light-dark(#d8ef7d, #b7d85c);
+    --train-mint: light-dark(#d9f5eb, #21473c);
+    width: 100%; color: var(--train-ink); font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  }
+  #vocab-training * { box-sizing: border-box; }
+  #vocab-training .app { min-height: 650px; overflow: hidden; border: 1px solid var(--train-line); border-radius: 22px; background: var(--train-canvas); }
+  #vocab-training .topbar { height: 66px; padding: 0 26px; display: flex; align-items: center; justify-content: space-between; background: var(--train-surface); border-bottom: 1px solid var(--train-line); }
+  #vocab-training .brand { display: flex; align-items: center; gap: 10px; font-weight: 500; }
+  #vocab-training .logo { width: 34px; height: 34px; border-radius: 11px; display: block; object-fit: cover; box-shadow: 0 8px 20px color-mix(in srgb, var(--train-violet) 25%, transparent); }
+  #vocab-training .nav { display: flex; align-items: center; gap: 4px; }
+  #vocab-training .nav a { color: var(--train-muted); padding: 8px 11px; border-radius: 10px; text-decoration: none; transition: color 160ms ease, background-color 160ms ease, transform 160ms ease; }
+  #vocab-training .nav a:hover { color: var(--train-violet-dark); background: var(--train-violet-soft); transform: translateY(-1px); }
+  #vocab-training .nav .active { color: var(--train-violet-dark); background: var(--train-violet-soft); }
+  #vocab-training .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--train-lime); color: #353b18; display: grid; place-items: center; font-weight: 500; }
+  #vocab-training .page { max-width: 880px; margin: 0 auto; padding: 26px 28px 34px; }
+  #vocab-training .heading { display: flex; justify-content: space-between; align-items: flex-end; gap: 18px; }
+  #vocab-training .eyebrow { color: var(--train-violet); text-transform: uppercase; letter-spacing: .09em; font-size: 12px; font-weight: 500; }
+  #vocab-training h2 { margin: 7px 0 5px; font-size: 30px; line-height: 1.15; font-weight: 500; }
+  #vocab-training h3 { margin: 0; font-weight: 500; }
+  #vocab-training p { margin: 0; color: var(--train-muted); }
+  #vocab-training button, #vocab-training input { font: inherit; }
+  #vocab-training button { cursor: pointer; }
+  #vocab-training .session-meta { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+  #vocab-training .meta-pill { padding: 7px 10px; border-radius: 999px; background: var(--train-surface); border: 1px solid var(--train-line); color: var(--train-muted); font-size: 12px; }
+  #vocab-training .meta-button { display: inline-flex; align-items: center; justify-content: center; gap: 7px; color: var(--train-ink); cursor: pointer; line-height: 1; transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease; }
+  #vocab-training .meta-button:hover { color: var(--train-violet-dark); background: var(--train-violet-soft); border-color: var(--train-violet); transform: translateY(-2px); box-shadow: 0 6px 14px color-mix(in srgb, var(--train-violet) 12%, transparent); }
+  #vocab-training .meta-chevron { display: block; width: 13px; height: 13px; flex: none; color: var(--train-violet); }
+  #vocab-training .session-settings { display: flex; align-items: center; gap: 18px; margin-top: 20px; padding: 9px 10px; border-radius: 14px; background: var(--train-surface); border: 1px solid var(--train-line); }
+  #vocab-training .setting-group { display: flex; align-items: center; gap: 8px; }
+  #vocab-training .setting-group + .setting-group { padding-left: 18px; border-left: 1px solid var(--train-line); }
+  #vocab-training .setting-label { color: var(--train-muted); font-size: 12px; white-space: nowrap; }
+  #vocab-training .direction-options { display: flex; gap: 5px; }
+  #vocab-training .direction-button { padding: 8px 10px; border: 1px solid transparent; border-radius: 9px; color: var(--train-muted); background: transparent; transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease, transform 150ms ease; }
+  #vocab-training .direction-button:hover { color: var(--train-violet-dark); background: var(--train-violet-soft); transform: translateY(-1px); }
+  #vocab-training .direction-button.active { color: var(--train-violet-dark); background: var(--train-violet-soft); border-color: color-mix(in srgb, var(--train-violet) 25%, transparent); }
+  #vocab-training .time-estimate { margin-left: auto; padding: 7px 9px; border-radius: 9px; background: color-mix(in srgb, var(--train-lime) 48%, var(--train-surface)); color: var(--train-ink); font-size: 12px; white-space: nowrap; }
+  #vocab-training .count-label { display: grid; gap: 2px; }
+  #vocab-training .count-label strong { font-weight: 500; }
+  #vocab-training .count-label span { color: var(--train-muted); font-size: 12px; }
+  #vocab-training .count-options { display: flex; gap: 7px; }
+  #vocab-training .count-button { min-width: 42px; padding: 8px 9px; border: 1px solid transparent; border-radius: 9px; color: var(--train-muted); background: transparent; transition: color 150ms ease, background-color 150ms ease, border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease; }
+  #vocab-training .count-button:hover { color: var(--train-violet-dark); background: var(--train-violet-soft); border-color: var(--train-violet); transform: translateY(-2px); box-shadow: 0 6px 14px color-mix(in srgb, var(--train-violet) 12%, transparent); }
+  #vocab-training .count-button.active { color: #fff; background: var(--train-violet); border-color: var(--train-violet); box-shadow: 0 6px 14px color-mix(in srgb, var(--train-violet) 22%, transparent); }
+  #vocab-training .mode-switch { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 18px 0 13px; padding: 5px; border-radius: 14px; background: var(--train-surface); border: 1px solid var(--train-line); }
+  #vocab-training .mode-button { border: 0; border-radius: 11px; padding: 11px 14px; background: transparent; color: var(--train-muted); display: flex; justify-content: center; align-items: center; gap: 8px; transition: color 150ms ease, background-color 150ms ease, transform 150ms ease; }
+  #vocab-training .mode-button:hover { color: var(--train-violet-dark); background: var(--train-violet-soft); }
+  #vocab-training .mode-button.active { color: #fff; background: var(--train-violet); box-shadow: 0 7px 16px color-mix(in srgb, var(--train-violet) 22%, transparent); }
+  #vocab-training .progress-row { display: flex; align-items: center; gap: 12px; margin: 0 2px 14px; color: var(--train-muted); font-size: 12px; }
+  #vocab-training .progress-track { height: 7px; border-radius: 999px; background: var(--train-violet-soft); overflow: hidden; flex: 1; }
+  #vocab-training .progress-track span { display: block; width: 40%; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--train-violet), var(--train-coral)); }
+  #vocab-training .exercise { background: var(--train-surface); border: 1px solid var(--train-line); border-radius: 20px; padding: 24px 28px; min-height: 350px; }
+  #vocab-training .prompt { text-align: center; padding: 5px 0 20px; }
+  #vocab-training .prompt-label { color: var(--train-muted); text-transform: uppercase; letter-spacing: .08em; font-size: 11px; }
+  #vocab-training .word { margin: 8px 0 7px; font-size: 38px; line-height: 1.1; font-weight: 500; }
+  #vocab-training .hint { display: inline-flex; gap: 6px; align-items: center; color: var(--train-violet-dark); background: var(--train-violet-soft); padding: 6px 9px; border-radius: 999px; font-size: 12px; }
+  #vocab-training .mode-panel { display: none; }
+  #vocab-training .mode-panel.active { display: block; }
+  #vocab-training .answers { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+  #vocab-training .answer { min-height: 58px; padding: 12px 15px; border: 1px solid var(--train-line); border-radius: 14px; background: var(--train-canvas); color: var(--train-ink); text-align: left; display: flex; align-items: center; gap: 11px; transition: transform 150ms ease, border-color 150ms ease, background-color 150ms ease, box-shadow 150ms ease; }
+  #vocab-training .answer-key { width: 28px; height: 28px; flex: none; display: grid; place-items: center; border-radius: 9px; color: var(--train-muted); background: var(--train-surface); border: 1px solid var(--train-line); font-size: 12px; }
+  #vocab-training .answer:hover { transform: translateY(-2px); border-color: var(--train-violet); background: var(--train-violet-soft); box-shadow: 0 7px 16px color-mix(in srgb, var(--train-violet) 10%, transparent); }
+  #vocab-training .answer.selected { border-color: var(--train-violet); background: var(--train-violet-soft); box-shadow: 0 0 0 2px color-mix(in srgb, var(--train-violet) 20%, transparent); }
+  #vocab-training .answer.selected .answer-key { background: var(--train-violet); border-color: var(--train-violet); color: #fff; }
+  #vocab-training .manual-form { max-width: 540px; margin: 0 auto; display: grid; gap: 12px; }
+  #vocab-training .manual-input { height: 56px; width: 100%; border: 1px solid var(--train-line); border-radius: 14px; padding: 0 16px; background: var(--train-canvas); color: var(--train-ink); font-size: 17px; text-align: center; transition: border-color 150ms ease, box-shadow 150ms ease; }
+  #vocab-training .manual-input:hover { border-color: var(--train-violet); }
+  #vocab-training .manual-input:focus { outline: none; border-color: var(--train-violet); box-shadow: 0 0 0 3px color-mix(in srgb, var(--train-violet) 18%, transparent); }
+  #vocab-training .check { height: 48px; border: 0; border-radius: 13px; color: #fff; background: var(--train-violet); font-weight: 500; transition: transform 150ms ease, background-color 150ms ease, box-shadow 150ms ease; }
+  #vocab-training .check:hover { transform: translateY(-2px); background: var(--train-violet-dark); box-shadow: 0 8px 18px color-mix(in srgb, var(--train-violet) 25%, transparent); }
+  #vocab-training .shortcuts { text-align: center; margin-top: 18px; color: var(--train-muted); font-size: 11px; }
+  #vocab-training .shortcuts kbd { border: 1px solid var(--train-line); border-bottom-width: 2px; background: var(--train-canvas); border-radius: 6px; padding: 2px 5px; font-family: inherit; }
+  #vocab-training button:focus-visible, #vocab-training a:focus-visible { outline: 3px solid color-mix(in srgb, var(--train-violet) 35%, transparent); outline-offset: 2px; }
+  @media (max-width: 700px) {
+    #vocab-training .app { min-height: 0; }
+    #vocab-training .topbar { padding: 0 14px; }
+    #vocab-training .nav a:not(.active) { display: none; }
+    #vocab-training .page { padding: 22px 14px 28px; }
+    #vocab-training .heading { align-items: flex-start; flex-direction: column; }
+    #vocab-training .session-meta { justify-content: flex-start; }
+    #vocab-training .session-settings { align-items: stretch; flex-wrap: wrap; gap: 10px; }
+    #vocab-training .setting-group { flex: 1; min-width: 220px; justify-content: space-between; }
+    #vocab-training .setting-group + .setting-group { padding-left: 0; border-left: 0; }
+    #vocab-training .count-options { width: auto; }
+    #vocab-training .count-button { flex: 1; }
+    #vocab-training .time-estimate { margin-left: 0; text-align: center; flex: 1 0 100%; }
+    #vocab-training .exercise { padding: 22px 16px; }
+    #vocab-training .answers { grid-template-columns: 1fr; }
+    #vocab-training .word { font-size: 34px; }
+  }
+  @media (max-width: 440px) {
+    #vocab-training .mode-button { padding: 10px 7px; font-size: 12px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #vocab-training button, #vocab-training a, #vocab-training input { transition: none; }
+    #vocab-training button:hover, #vocab-training a:hover { transform: none; }
+  }
+</style>
+
+<div id="vocab-training">
+  <section class="app">
+    <header class="topbar">
+      <div class="brand"><img class="logo" src="../frontend/public/app-icon.png" alt=""> Vocab</div>
+      <nav class="nav" aria-label="Основная навигация"><a href="#overview">Обзор</a><a href="#words">Слова</a><a href="#training" class="active" aria-current="page">Тренировка</a></nav>
+      <div class="avatar" aria-label="Профиль">Д</div>
+    </header>
+
+    <main class="page">
+      <div class="heading">
+        <div><div class="eyebrow">Ежедневная практика</div><h2>Тренировка</h2><p>Выберите удобный режим и повторите слова.</p></div>
+        <div class="session-meta" aria-label="Настройки тренировки">
+          <button class="meta-pill meta-button" data-count-button aria-label="Изменить количество слов">12 слов <svg class="meta-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 6 4 4 4-4"></path></svg></button>
+          <span class="meta-pill" data-time-summary>≈ 5 минут</span>
+          <button class="meta-pill meta-button" data-direction-button aria-label="Изменить направление перевода">EN → RU <svg class="meta-chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 6 4 4 4-4"></path></svg></button>
+        </div>
+      </div>
+
+      <div class="mode-switch" role="tablist" aria-label="Режим тренировки">
+        <button class="mode-button active" role="tab" aria-selected="true" data-mode="choice"><span>▦</span>Выбрать ответ</button>
+        <button class="mode-button" role="tab" aria-selected="false" data-mode="manual"><span>✎</span>Написать перевод</button>
+      </div>
+
+      <div class="progress-row"><span data-progress-label>4 из 12</span><div class="progress-track" aria-label="Пройдено 33 процента"><span style="width:33%"></span></div><span data-progress-percent>33%</span></div>
+
+      <section class="exercise">
+        <div class="prompt"><div class="prompt-label">Переведите на русский</div><div class="word">curious</div><span class="hint">A / 文 · выбрать перевод</span></div>
+
+        <div class="mode-panel active" data-panel="choice">
+          <div class="answers">
+            <button class="answer"><span class="answer-key">1</span><span data-ru="осторожный" data-en="cautious">осторожный</span></button>
+            <button class="answer"><span class="answer-key">2</span><span data-ru="любопытный" data-en="curious">любопытный</span></button>
+            <button class="answer"><span class="answer-key">3</span><span data-ru="уверенный" data-en="confident">уверенный</span></button>
+            <button class="answer"><span class="answer-key">4</span><span data-ru="спокойный" data-en="calm">спокойный</span></button>
+          </div>
+          <div class="shortcuts">Можно использовать клавиши <kbd>1</kbd>–<kbd>4</kbd></div>
+        </div>
+
+        <div class="mode-panel" data-panel="manual">
+          <form class="manual-form">
+            <input class="manual-input" type="text" placeholder="Введите перевод" aria-label="Перевод слова curious">
+            <button class="check" type="button">Проверить ответ</button>
+          </form>
+          <div class="shortcuts"><kbd>Enter</kbd> — проверить ответ</div>
+        </div>
+      </section>
+    </main>
+  </section>
+</div>
+
+<script>
+  (() => {
+    const root = document.getElementById('vocab-training');
+    const modeButtons = [...root.querySelectorAll('.mode-button')];
+    const panels = [...root.querySelectorAll('.mode-panel')];
+    modeButtons.forEach((button) => button.addEventListener('click', () => {
+      modeButtons.forEach((item) => {
+        const selected = item === button;
+        item.classList.toggle('active', selected);
+        item.setAttribute('aria-selected', String(selected));
+      });
+      panels.forEach((panel) => panel.classList.toggle('active', panel.dataset.panel === button.dataset.mode));
+    }));
+    root.querySelectorAll('.answer').forEach((answer) => answer.addEventListener('click', () => {
+      root.querySelectorAll('.answer').forEach((item) => item.classList.toggle('selected', item === answer));
+    }));
+    const countButton = root.querySelector('[data-count-button]');
+    const timeSummary = root.querySelector('[data-time-summary]');
+    const progressLabel = root.querySelector('[data-progress-label]');
+    const progressPercent = root.querySelector('[data-progress-percent]');
+    const progressTrack = root.querySelector('.progress-track');
+    const progressFill = root.querySelector('.progress-track span');
+    const counts = [{ count: 12, minutes: 5 }, { count: 24, minutes: 10 }, { count: 48, minutes: 20 }];
+    let countIndex = 0;
+    countButton.addEventListener('click', () => {
+      countIndex = (countIndex + 1) % counts.length;
+      const { count, minutes } = counts[countIndex];
+      const percent = Math.round(4 / count * 100);
+      countButton.firstChild.textContent = `${count} слов `;
+      timeSummary.textContent = `≈ ${minutes} минут`;
+      progressLabel.textContent = `4 из ${count}`;
+      progressPercent.textContent = `${percent}%`;
+      progressFill.style.width = `${percent}%`;
+      progressTrack.setAttribute('aria-label', `Пройдено ${percent} процентов`);
+    });
+    const directionButton = root.querySelector('[data-direction-button]');
+    const promptLabel = root.querySelector('.prompt-label');
+    const questionWord = root.querySelector('.word');
+    const manualInput = root.querySelector('.manual-input');
+    const answerLabels = [...root.querySelectorAll('.answer span:last-child')];
+    let russianToEnglish = false;
+    directionButton.addEventListener('click', () => {
+      russianToEnglish = !russianToEnglish;
+      directionButton.firstChild.textContent = russianToEnglish ? 'RU → EN ' : 'EN → RU ';
+      promptLabel.textContent = russianToEnglish ? 'Переведите на английский' : 'Переведите на русский';
+      questionWord.textContent = russianToEnglish ? 'любопытный' : 'curious';
+      manualInput.setAttribute('aria-label', russianToEnglish ? 'Перевод слова любопытный' : 'Перевод слова curious');
+      answerLabels.forEach((label) => { label.textContent = russianToEnglish ? label.dataset.en : label.dataset.ru; });
+      root.querySelectorAll('.answer').forEach((item) => item.classList.remove('selected'));
+    });
+  })();
+</script>

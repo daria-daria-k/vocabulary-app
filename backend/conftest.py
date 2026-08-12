@@ -50,7 +50,7 @@ def client(test_db, fake_redis):
 def user_data():
     return {
         "email": "test@mail.ru",
-        "password": "test123",
+        "password": "test123te",
     }
 
 
@@ -93,7 +93,7 @@ def created_word(client, auth_headers):
 @pytest.fixture
 def auth_headers_second(client):
     """Заголовки авторизации для второго пользователя (для тестов изоляции)"""
-    other_user = {"email": "other@mail.ru", "password": "test123"}
+    other_user = {"email": "other@mail.ru", "password": "test123ty"}
     client.post(
         "/auth/register",
         json=other_user,

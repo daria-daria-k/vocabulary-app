@@ -1,0 +1,125 @@
+<style>
+  #vocab-refined {
+    --vocab-ink: light-dark(#17152f, #f5f3ff);
+    --vocab-muted: light-dark(#6d6a80, #aaa5bd);
+    --vocab-canvas: light-dark(#f7f6ff, #12111c);
+    --vocab-surface: light-dark(#ffffff, #1c1a29);
+    --vocab-line: light-dark(#e5e1f1, #39354b);
+    --vocab-violet: light-dark(#6554d9, #9b8cff);
+    --vocab-violet-dark: light-dark(#40329e, #7564e8);
+    --vocab-violet-soft: light-dark(#ebe8ff, #2e294c);
+    --vocab-coral: light-dark(#ff7d67, #ff9b89);
+    --vocab-lime: light-dark(#d8ef7d, #b7d85c);
+    --vocab-mint: light-dark(#d9f5eb, #21473c);
+    width: 100%; color: var(--vocab-ink); font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  }
+  #vocab-refined * { box-sizing: border-box; }
+  #vocab-refined .app { min-height: 600px; overflow: hidden; border: 1px solid var(--vocab-line); border-radius: 22px; background: var(--vocab-canvas); }
+  #vocab-refined .topbar { height: 66px; padding: 0 26px; display: flex; align-items: center; justify-content: space-between; background: color-mix(in srgb, var(--vocab-surface) 90%, transparent); border-bottom: 1px solid var(--vocab-line); }
+  #vocab-refined .brand { display: flex; align-items: center; gap: 10px; font-weight: 500; }
+  #vocab-refined .logo { width: 34px; height: 34px; border-radius: 11px; display: block; object-fit: cover; box-shadow: 0 8px 20px color-mix(in srgb, var(--vocab-violet) 25%, transparent); }
+  #vocab-refined .nav { display: flex; align-items: center; gap: 4px; }
+  #vocab-refined .nav a { color: var(--vocab-muted); padding: 8px 11px; border-radius: 10px; text-decoration: none; transition: color 150ms ease, background-color 150ms ease, transform 150ms ease; }
+  #vocab-refined .nav a:hover { color: var(--vocab-violet-dark); background: var(--vocab-violet-soft); transform: translateY(-1px); }
+  #vocab-refined .nav .active { color: var(--vocab-violet-dark); background: var(--vocab-violet-soft); }
+  #vocab-refined .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--vocab-lime); color: #353b18; display: grid; place-items: center; font-weight: 500; }
+  #vocab-refined .page { max-width: 1000px; margin: 0 auto; padding: 30px 28px 34px; }
+  #vocab-refined .headline { display: flex; align-items: end; justify-content: space-between; gap: 18px; }
+  #vocab-refined .date { color: var(--vocab-violet); text-transform: uppercase; letter-spacing: .09em; font-size: 12px; font-weight: 500; }
+  #vocab-refined h2 { margin: 7px 0 6px; font-weight: 500; font-size: 30px; line-height: 1.15; }
+  #vocab-refined h3 { margin: 0; font-weight: 500; }
+  #vocab-refined p { margin: 0; color: var(--vocab-muted); }
+  #vocab-refined .quick-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+  #vocab-refined button { font: inherit; cursor: pointer; }
+  #vocab-refined .quick { border: 1px solid var(--vocab-line); background: var(--vocab-surface); color: var(--vocab-ink); padding: 9px 13px; border-radius: 12px; display: inline-flex; align-items: center; gap: 8px; }
+  #vocab-refined .quick.primary { background: var(--vocab-violet); border-color: var(--vocab-violet); color: #fff; }
+  #vocab-refined .quick { transition: transform 150ms ease, box-shadow 150ms ease, background-color 150ms ease, border-color 150ms ease; }
+  #vocab-refined .quick:hover { transform: translateY(-2px); border-color: var(--vocab-violet); background: var(--vocab-violet-soft); box-shadow: 0 7px 16px color-mix(in srgb, var(--vocab-violet) 12%, transparent); }
+  #vocab-refined .quick.primary:hover { color: #fff; background: var(--vocab-violet-dark); border-color: var(--vocab-violet-dark); box-shadow: 0 8px 18px color-mix(in srgb, var(--vocab-violet) 25%, transparent); }
+  #vocab-refined .quick-icon { width: 21px; height: 21px; border-radius: 7px; display: grid; place-items: center; background: var(--vocab-violet-soft); color: var(--vocab-violet-dark); font-weight: 500; }
+  #vocab-refined .primary .quick-icon { color: var(--vocab-violet-dark); background: #fff; }
+  #vocab-refined .hero { display: grid; grid-template-columns: 1.35fr .85fr; gap: 16px; margin-top: 26px; }
+  #vocab-refined .practice { min-height: 220px; padding: 24px; color: #fff; border-radius: 21px; background: linear-gradient(135deg, var(--vocab-violet-dark), var(--vocab-violet) 58%, #8e70e7); position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; }
+  #vocab-refined .practice::after { content: ''; position: absolute; width: 180px; height: 180px; right: -54px; top: -64px; border: 34px solid color-mix(in srgb, var(--vocab-coral) 76%, transparent); border-radius: 50%; transform: rotate(-18deg); }
+  #vocab-refined .practice-label { color: #dcd6ff; text-transform: uppercase; letter-spacing: .08em; font-size: 12px; }
+  #vocab-refined .practice h3 { font-size: 25px; margin: 9px 0 5px; }
+  #vocab-refined .practice p { color: #ddd9f7; }
+  #vocab-refined .start { align-self: flex-start; border: 0; border-radius: 12px; padding: 10px 14px; background: var(--vocab-lime); color: #292d13; font-weight: 500; z-index: 1; }
+  #vocab-refined .start { transition: transform 150ms ease, box-shadow 150ms ease, filter 150ms ease; }
+  #vocab-refined .start:hover { transform: translateY(-2px); filter: saturate(1.12) brightness(1.02); box-shadow: 0 8px 18px color-mix(in srgb, #292d13 24%, transparent); }
+  #vocab-refined .progress { background: var(--vocab-surface); border: 1px solid var(--vocab-line); border-radius: 21px; padding: 21px; display: grid; align-content: center; gap: 17px; }
+  #vocab-refined .progress-top { display: flex; align-items: center; gap: 15px; }
+  #vocab-refined .ring { width: 82px; height: 82px; border-radius: 50%; background: conic-gradient(var(--vocab-coral) 0 68%, var(--vocab-violet-soft) 68% 100%); display: grid; place-items: center; position: relative; flex: none; }
+  #vocab-refined .ring::after { content: ''; position: absolute; inset: 9px; border-radius: 50%; background: var(--vocab-surface); }
+  #vocab-refined .ring strong { position: relative; z-index: 1; font-size: 18px; }
+  #vocab-refined .counts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+  #vocab-refined .count { border-radius: 11px; padding: 9px 7px; text-align: center; background: var(--vocab-violet-soft); }
+  #vocab-refined .count:nth-child(2) { background: color-mix(in srgb, var(--vocab-coral) 18%, var(--vocab-surface)); }
+  #vocab-refined .count:nth-child(3) { background: var(--vocab-mint); }
+  #vocab-refined .count strong { display: block; }
+  #vocab-refined .count span { color: var(--vocab-muted); font-size: 11px; }
+  #vocab-refined .lower { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+  #vocab-refined .panel { background: var(--vocab-surface); border: 1px solid var(--vocab-line); border-radius: 18px; padding: 19px; }
+  #vocab-refined .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+  #vocab-refined .streak { padding: 5px 9px; border-radius: 999px; background: color-mix(in srgb, var(--vocab-coral) 18%, var(--vocab-surface)); color: var(--vocab-ink); font-size: 12px; }
+  #vocab-refined .week { display: flex; align-items: end; justify-content: space-between; min-height: 88px; gap: 8px; }
+  #vocab-refined .day { flex: 1; display: grid; justify-items: center; gap: 7px; color: var(--vocab-muted); font-size: 11px; }
+  #vocab-refined .bar { width: 100%; max-width: 24px; border-radius: 8px 8px 3px 3px; background: var(--vocab-violet-soft); }
+  #vocab-refined .bar.done { background: linear-gradient(to top, var(--vocab-violet), var(--vocab-coral)); }
+  #vocab-refined .word { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 10px 8px; border: 0; border-bottom: 1px solid var(--vocab-line); border-radius: 9px; background: transparent; color: var(--vocab-ink); text-align: left; transition: background-color 150ms ease, transform 150ms ease; }
+  #vocab-refined .word:hover { background: var(--vocab-violet-soft); transform: translateX(3px); }
+  #vocab-refined .word:last-child { border-bottom: 0; }
+  #vocab-refined .word small { color: var(--vocab-muted); }
+  #vocab-refined .tag { padding: 5px 9px; border-radius: 999px; background: var(--vocab-violet-soft); color: var(--vocab-violet-dark); font-size: 11px; }
+  #vocab-refined .all-words { border: 0; cursor: pointer; transition: color 150ms ease, background-color 150ms ease, transform 150ms ease; }
+  #vocab-refined .all-words:hover { color: #fff; background: var(--vocab-violet); transform: translateY(-1px); }
+  #vocab-refined button:focus-visible, #vocab-refined a:focus-visible { outline: 3px solid color-mix(in srgb, var(--vocab-violet) 35%, transparent); outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) {
+    #vocab-refined button, #vocab-refined a, #vocab-refined .word { transition: none; }
+    #vocab-refined button:hover, #vocab-refined a:hover, #vocab-refined .word:hover { transform: none; }
+  }
+  @media (max-width: 720px) {
+    #vocab-refined .topbar { padding: 0 14px; }
+    #vocab-refined .nav a:not(.active) { display: none; }
+    #vocab-refined .page { padding: 22px 14px 26px; }
+    #vocab-refined .headline { align-items: flex-start; flex-direction: column; }
+    #vocab-refined .quick-actions { justify-content: flex-start; }
+    #vocab-refined .hero, #vocab-refined .lower { grid-template-columns: 1fr; }
+    #vocab-refined .app { min-height: 0; }
+  }
+</style>
+
+<div id="vocab-refined">
+  <section class="app">
+    <header class="topbar">
+      <div class="brand"><img class="logo" src="../frontend/public/app-icon.png" alt=""> Vocab</div>
+      <nav class="nav" aria-label="Основная навигация"><a href="#overview" class="active" aria-current="page">Обзор</a><a href="#words">Слова</a><a href="#training">Тренировка</a></nav>
+      <div class="avatar" aria-label="Профиль">Д</div>
+    </header>
+    <main class="page">
+      <div class="headline">
+        <div><div class="date">Воскресенье, 9 августа</div><h2>Доброе утро, Даша</h2><p>Сегодня достаточно пяти минут практики.</p></div>
+        <div class="quick-actions" aria-label="Быстрые действия">
+          <button class="quick"><span class="quick-icon">＋</span>Добавить слово</button>
+          <button class="quick primary"><span class="quick-icon">▶</span>Начать тренировку</button>
+        </div>
+      </div>
+
+      <div class="hero">
+        <section class="practice">
+          <div><div class="practice-label">План на сегодня</div><h3>Повторить 12 слов</h3><p>Около 5 минут · EN → RU</p></div>
+          <button class="start">Начать сейчас →</button>
+        </section>
+        <section class="progress">
+          <div class="progress-top"><div class="ring"><strong>68%</strong></div><div><h3>Общий прогресс</h3><p>34 из 50 слов выучено</p></div></div>
+          <div class="counts"><div class="count"><strong>4</strong><span>новых</span></div><div class="count"><strong>12</strong><span>учу</span></div><div class="count"><strong>34</strong><span>знаю</span></div></div>
+        </section>
+      </div>
+
+      <div class="lower">
+        <section class="panel"><div class="panel-head"><h3>Ритм недели</h3><span class="streak">🔥 5 дней подряд</span></div><div class="week"><div class="day"><span class="bar done" style="height:46px"></span>Пн</div><div class="day"><span class="bar done" style="height:66px"></span>Вт</div><div class="day"><span class="bar done" style="height:36px"></span>Ср</div><div class="day"><span class="bar done" style="height:76px"></span>Чт</div><div class="day"><span class="bar done" style="height:55px"></span>Пт</div><div class="day"><span class="bar" style="height:23px"></span>Сб</div><div class="day"><span class="bar" style="height:15px"></span>Вс</div></div></section>
+        <section class="panel"><div class="panel-head"><h3>Продолжить изучение</h3><button class="tag all-words">Все слова →</button></div><button class="word"><span><strong>curious</strong><br><small>любопытный</small></span><span class="tag">учу</span></button><button class="word"><span><strong>effort</strong><br><small>усилие</small></span><span class="tag">учу</span></button></section>
+      </div>
+    </main>
+  </section>
+</div>
